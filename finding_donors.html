@@ -13269,14 +13269,14 @@ $$ F_{\beta} = (1 + \beta^2) \cdot \frac{precision \cdot recall}{\left( \beta^2 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[59]:</div>
+<div class="prompt input_prompt">In&nbsp;[89]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">fbeta_score</span>
 
 <span class="n">_pred</span> <span class="o">=</span> <span class="n">income</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#we predict that everyone makes more than 50K, so everyone donates!</span>
 
-<span class="n">tp</span> <span class="o">=</span> <span class="n">n_greater_50k</span> <span class="c1">#true positives - the number of people that do make more tnah 50K</span>
+<span class="n">tp</span> <span class="o">=</span> <span class="n">n_greater_50k</span> <span class="c1">#true positives - the number of people that do make more than 50K</span>
 <span class="n">fp</span> <span class="o">=</span> <span class="n">n_at_most_50k</span> <span class="c1">#false positive - the number of people that make less or equal to 50K</span>
 
 <span class="c1"># TODO: Calculate accuracy TP / TP + FP</span>
@@ -13290,7 +13290,7 @@ $$ F_{\beta} = (1 + \beta^2) \cdot \frac{precision \cdot recall}{\left( \beta^2 
 <span class="n">fscore</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">beta</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">accuracy</span> <span class="o">*</span> <span class="n">recall</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">beta</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">accuracy</span> <span class="o">+</span> <span class="n">recall</span><span class="p">)</span>
 
 <span class="c1">#sklearn has a method to calculate Fscore, so we check if out calculation is correct!</span>
-<span class="n">fscore_sklearn</span><span class="o">=</span><span class="n">fbeta_score</span><span class="p">(</span><span class="n">income</span><span class="p">,</span><span class="n">income_pred</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">fscore_sklearn</span><span class="o">=</span><span class="n">fbeta_score</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">_pred</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="k">print</span> <span class="s2">&quot;[F-score (by hand): {:.4f}, F-score (sklearn): {:.4f}]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fscore</span><span class="p">,</span> <span class="n">fscore_sklearn</span><span class="p">)</span>
 
 <span class="c1"># Print the results </span>
@@ -13374,6 +13374,7 @@ Naive Predictor: [Accuracy score: 0.2478, F-score: 0.2917]
 <ul>
 <li>doesn't work well on phrases with different meaning</li>
 <li>small datasets</li>
+<li>assumes that all variables are conditionally independent (rarely the case) </li>
 </ul>
 <p>Advantages</p>
 <ul>
@@ -13413,6 +13414,10 @@ Naive Predictor: [Accuracy score: 0.2478, F-score: 0.2917]
 <ul>
 <li>base algorithm to start with</li>
 </ul>
+<p>Source: <a href="http://www.dummies.com/programming/big-data/data-science/machine-learning-dummies-cheat-sheet/">http://www.dummies.com/programming/big-data/data-science/machine-learning-dummies-cheat-sheet/</a></p>
+<p><a href="http://blog.echen.me/2011/04/27/choosing-a-machine-learning-classifier/">http://blog.echen.me/2011/04/27/choosing-a-machine-learning-classifier/</a></p>
+<p><a href="https://www.dezyre.com/article/top-10-machine-learning-algorithms/202">https://www.dezyre.com/article/top-10-machine-learning-algorithms/202</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Logistic_regression">https://en.wikipedia.org/wiki/Logistic_regression</a></p>
 
 </div>
 </div>
@@ -14365,9 +14370,12 @@ RDQtDYqIiIiIiGja/wcXOec7aVMEXgAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer: </strong></p>
-<p>AdaBoost is a Ensemble Learning where many learners build a stronger learning algorithm. AdaBoost works by choosing a base algorithm and improving it by accounting for the incorrectly classified examples in the training set.</p>
-<p>Predictions are made by calculating the weighted average of the weak classifiers.</p>
+<p>AdaBoost is a Ensemble Learning where many learners build a stronger learning algorithm.</p>
+<p>AdaBoost works by choosing a base algorithm and improving it by accounting for the incorrectly classified examples in the training set.</p>
+<p>The training is done iteratively. During each iteration,the model tries to classify the data. Based on its performance it assigns higher weights to the data that wasn't classified correctly. The best learner is also incorporated into the ensemble of learners. It then focuses in each iteration on the missclassified data and tries again. The process is repeated until the max number of iteration defined by user.</p>
+<p>For a new input instance, each weak learner calculates a predicted value. The predicted values are weighted by each weak learners value. The prediction for the ensemble model is taken as a the sum of the weighted predictions. If the sum is positive, then the first class is predicted, if negative the second class is predicted.</p>
 <p>Source: <a href="https://en.wikipedia.org/wiki/AdaBoost">Wikipedia</a></p>
+<p>[<a href="http://machinelearningmastery.com/boosting-and-adaboost-for-machine-learning/">http://machinelearningmastery.com/boosting-and-adaboost-for-machine-learning/</a>] (<a href="http://machinelearningmastery.com/boosting-and-adaboost-for-machine-learning/">http://machinelearningmastery.com/boosting-and-adaboost-for-machine-learning/</a>)</p>
 
 </div>
 </div>
